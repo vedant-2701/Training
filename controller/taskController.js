@@ -1,5 +1,6 @@
 const express=require('express');
-const {logActivity,sendEmail} =require ('../util');
+const sendEmail=require ('../utils/email');
+const logActivity=require('../utils/log');
 const Task=require('../models/Task');
 
 const createTask= async (req, res) => {

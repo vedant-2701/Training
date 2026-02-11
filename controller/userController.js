@@ -1,5 +1,6 @@
 const express=require('express');
-const {logActivity,sendEmail} =require ('../util');
+const sendEmail=require ('../utils/email');
+const logActivity=require('../utils/log');
 const User = require('../models/User.js');
 
 const createUser = async (req, res) => {
