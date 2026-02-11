@@ -1,12 +1,11 @@
 const express = require("express");
+require("dotenv").config();
 const { connectMongoDB } = require("./db/db");
 const { userRouter } = require("./router/userRouter");
 const { taskRouter } = require("./router/taskRouter");
 
 const app = express();
 app.use(express.json());
-
-const PORT = 5000;
 
 connectMongoDB();
 
@@ -18,6 +17,6 @@ app.use("/users", userRouter);
 app.use("/tasks", taskRouter);
 // ---------------- SERVER ----------------
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server running on port 5000");
 });
