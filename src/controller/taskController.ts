@@ -1,10 +1,20 @@
 import type {Request, Response} from "express";
-import sendEmail from '../utils/email';
-import logActivity from'../utils/log';
+//import sendEmail from '../utils/email';
+//import logActivity from'../utils/log';
 import Task from'../model/Task';
 import User from '../model/User';
 
-const createTask= async (req : Request, res : Response) => {
+interface Text{
+    send(to:string ,message :string) : void
+}
+
+interface Logging{
+    log(message:string ) : void 
+}
+export default class taskController{
+
+    constructor(private text:Text,private logging :Logging){}
+ createTask= async (req : Request, res : Response) => {
   try {
     if (!req.body.title) {
       return res.status(400).send("Title is required");
@@ -21,10 +31,10 @@ const createTask= async (req : Request, res : Response) => {
 
     await task.save();
 
-    logActivity("Task created");
+    this.logging.log("Task created");
 
     if (task.assignedTo) {
-      sendEmail(task.assignedTo, "Task Assigned");
+      this.text.send(task.assignedTo, "Task Assigned");
     }
 
     res.send(task);
@@ -33,11 +43,11 @@ const createTask= async (req : Request, res : Response) => {
   }
 };
 
-const deleteTask=async (req : Request, res : Response) => {
+ deleteTask=async (req : Request, res : Response) => {
   try {
     await Task.findByIdAndDelete(req.params.id);
 
-    logActivity("Task deleted");
+    this.logging.log("Task deleted");
 
     res.send({ message: "Deleted" });
   } catch (err : any) {
@@ -45,7 +55,7 @@ const deleteTask=async (req : Request, res : Response) => {
   }
 };
 
-const updateTask =  async (req : Request, res : Response) => {
+ updateTask =  async (req : Request, res : Response) => {
   try {
     const task = await Task.findById(req.params.id);
 
@@ -58,7 +68,7 @@ const updateTask =  async (req : Request, res : Response) => {
 
     await task.save();
 
-    logActivity("Task updated");
+    this.logging.log("Task updated");
 
     res.send(task);
   } catch (err : any) {
@@ -66,8 +76,9 @@ const updateTask =  async (req : Request, res : Response) => {
   }
 };
 
-const getTasks =  async (req : Request, res : Response) => {
+ getTasks =  async (req : Request, res : Response) => {
   const tasks = await Task.find();
   res.send(tasks);
 };
-export {createTask,deleteTask,updateTask,getTasks};
+}
+//export {createTask,deleteTask,updateTask,getTasks};

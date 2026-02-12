@@ -1,10 +1,20 @@
 
 import express from'express';
 const router=express.Router();
-import {createUser,getUsers} from'../controller/userController'; 
+import sendEmail from '../utils/email';
+import logActivity from'../utils/log';
+import sendSMS from '../utils/sms'
+//import {createUser,getUsers} from'../controller/userController'; 
+import userController from '../controller/userController'
 
-router.post("/",createUser);
+const mail={send:sendEmail};
+const logs={log:logActivity};
+const sms={send:sendSMS};
 
-router.get("/",getUsers);
+const usercontroller= new userController(sms,logs);
+
+router.post("/",usercontroller.createUser);
+
+router.get("/",usercontroller.getUsers);
 
  export default  router;

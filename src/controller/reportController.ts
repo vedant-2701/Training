@@ -1,7 +1,9 @@
 import type {Request, Response} from "express";
 
 import Task from'../model/Task';
-const taskReport= async (req : Request, res : Response) => {
+
+export default class reportController{
+taskReport= async (req : Request, res : Response) => {
   const tasks = await Task.find();
 
   const report = {
@@ -12,5 +14,6 @@ const taskReport= async (req : Request, res : Response) => {
 
   res.send(report);
 };
+}
 
- export default taskReport;
+//export default taskReport;
