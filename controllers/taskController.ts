@@ -16,7 +16,11 @@ const getTasks = async (req : Request, res : Response) => {
 }
 
 const updateTask = async (req : Request, res : Response) => {
-  const task = await mongoTaskUtil.updateTask(req.body);
+  const data = {
+    ...req.body,
+    id : req.params.id
+  }
+  const task = await mongoTaskUtil.updateTask(data);
   res.send(task);
 }
 

@@ -4,7 +4,11 @@ import { taskAbstractInterface } from "./taskFunctionsAbstractClass.js";
 
 class mongoTaskModules extends taskAbstractInterface{
     async create (data : baseTask) : Promise<baseTask> {
-        const task = new Task(data);
+        const task = new Task({
+            ...data,
+            status : "OPEN",
+            createdAt : new Date()
+        });
         await task.save();
 
         return task.toObject();
