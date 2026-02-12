@@ -1,6 +1,6 @@
-const { User } = require("../model/userSchema")
 const { sendEmail } = require("../utils/emailUtil");
 const { logActivity } = require("../utils/logUtil");
+const { saveUser, fetchUsers } = require("../utils/userUtil");
 
 const createUser = async (req, res) => {
   try {
@@ -8,8 +8,7 @@ const createUser = async (req, res) => {
       return res.status(400).send("Email required");
     }
 
-    const user = new User(req.body);
-    await user.save();
+    const user = await saveUser(req.body);
 
     sendEmail(user.email, "Welcome");
     logActivity("User created");
@@ -21,7 +20,7 @@ const createUser = async (req, res) => {
 }
 
 const getUsers = async ( req, res) => {
-    const users = await User.find();
+    const users = await fetchUsers()
     res.send(users);
 }
 

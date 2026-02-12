@@ -1,6 +1,7 @@
 const { Task } = require("../model/taskSchema");
 const { sendEmail } = require("../utils/emailUtil");
 const { logActivity } = require("../utils/logUtil");
+const { findTask } = require("../utils/taskUtil");
 
 const createTask = async (req, res) => {
   try {
@@ -29,14 +30,16 @@ const createTask = async (req, res) => {
 }
 
 const getTasks = async (req, res) => {
-  const tasks = await Task.find();
+  
+  const tasks = await findTask();
+
   res.send(tasks);
 }
 
 const updateTask = async (req, res) => {
 
   try {
-    const task = await Task.findById(req.params.id);
+    const task = await findTask(req.params.id);
 
     if (!task) {
       return res.status(404).send("Task not found");
