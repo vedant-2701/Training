@@ -1,8 +1,10 @@
-const express = require("express");
-require("dotenv").config();
-const { connectMongoDB } = require("./db/db");
-const { userRouter } = require("./router/userRouter");
-const { taskRouter } = require("./router/taskRouter");
+import express from "express";
+import dotenv from "dotenv";
+import { connectMongoDB } from "./db/db.js";
+import { userRouter } from "./router/userRouter.js";
+import { taskRouter } from "./router/taskRouter.js";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());

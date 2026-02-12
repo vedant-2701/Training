@@ -1,9 +1,10 @@
-const { Task } = require("../model/taskSchema");
-const { sendEmail } = require("../utils/emailUtil");
-const { logActivity } = require("../utils/logUtil");
-const { findTask } = require("../utils/taskUtil");
+import { Task } from "../model/taskSchema.js";
+import { sendEmail } from "../utils/emailUtil.js";
+import { logActivity } from "../utils/logUtil.js";
+import { findTask } from "../utils/taskUtil.js";
+import type { Request, Response } from "express";
 
-const createTask = async (req, res) => {
+const createTask = async (req : Request, res : Response) => {
   try {
     if (!req.body.title) {
       return res.status(400).send("Title is required");
@@ -24,22 +25,22 @@ const createTask = async (req, res) => {
     }
 
     res.send(task);
-  } catch (err) {
+  } catch (err : any) {
     res.status(500).send(err.message);
   }
 }
 
-const getTasks = async (req, res) => {
+const getTasks = async (req : Request, res : Response) => {
   
-  const tasks = await findTask();
+  const tasks = await findTask("");
 
   res.send(tasks);
 }
 
-const updateTask = async (req, res) => {
+const updateTask = async (req : Request, res : Response) => {
 
   try {
-    const task = await findTask(req.params.id);
+    const task = await findTask(req.params.id ?? "");
 
     if (!task) {
       return res.status(404).send("Task not found");
@@ -57,21 +58,21 @@ const updateTask = async (req, res) => {
     }
 
     res.send(task);
-  } catch (err) {
+  } catch (err : any) {
     res.status(500).send(err.message);
   }
 }
 
-const deleteTask = async (req, res) => {
+const deleteTask = async (req : Request, res : Response) => {
   try {
     await Task.findByIdAndDelete(req.params.id);
 
     logActivity("Task deleted");
 
     res.send({ message: "Deleted" });
-  } catch (err) {
+  } catch (err : any) {
     res.status(500).send(err.message);
   }
 }
 
-module.exports = { createTask, getTasks, updateTask, deleteTask };
+export { createTask, getTasks, updateTask, deleteTask };

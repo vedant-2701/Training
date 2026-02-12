@@ -1,6 +1,6 @@
-const express = require("express");
-const { createTask, getTasks, updateTask, deleteTask } = require("../controllers/taskController");
-const { taskReport } = require("../controllers/reportController");
+import express from "express";
+import { createTask, getTasks, updateTask, deleteTask } from "../controllers/taskController.js";
+import { taskReport } from "../controllers/reportController.js";
 
 const taskRouter = express.Router();
 
@@ -10,4 +10,4 @@ taskRouter.put("/:id", updateTask); // update task
 taskRouter.delete("/:id", deleteTask); // delete task
 taskRouter.get("/report", taskReport) // report on all tasks
 
-module.exports = { taskRouter };
+export { taskRouter };

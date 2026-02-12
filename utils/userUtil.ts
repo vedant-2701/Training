@@ -1,6 +1,6 @@
-const { User } = require("../model/userSchema");
+import { User } from "../model/userSchema.js";
 
-const saveUser = async (data) => {
+const saveUser = async (data : object) => {
     const user = new User(data);
     await user.save();
 
@@ -15,4 +15,4 @@ const fetchUsers = async () => {
 
 // use ts, use interfaces as db changes, tracing logs and error handling, Di, class structure and basic oop's 
 
-module.exports = { saveUser, fetchUsers }
+export { saveUser, fetchUsers }

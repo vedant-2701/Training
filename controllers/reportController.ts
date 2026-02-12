@@ -1,6 +1,7 @@
-const { Task } = require("../model/taskSchema");
+import { Task } from "../model/taskSchema.js";
+import type { Request, Response } from "express";
 
-const taskReport = async (req, res) => {
+const taskReport = async (req : Request , res : Response ) => {
   const tasks = await Task.find();
 
   const report = {
@@ -12,4 +13,4 @@ const taskReport = async (req, res) => {
   res.send(report);
 }
 
-module.exports = { taskReport }
+export { taskReport };
