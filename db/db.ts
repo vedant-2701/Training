@@ -8,11 +8,15 @@ const connectMongoDB = () => {
     logActivity("MongoDB Connection string not provided");
   }
 
-  mongoose.connect(process.env.mongoDBConnection ?? "");
+  try{
+    mongoose.connect(process.env.mongoDBConnection ?? "");
 
-  mongoose.connection.on("connected", () => {
-      console.log("MongoDB connected");
-  });
+    mongoose.connection.on("connected", () => {
+        console.log("MongoDB connected");
+    });
+  }catch (err : any){
+    logActivity(`Error while connecting to mongoDB ${err}`);
+  }
 }
 
 export { connectMongoDB }

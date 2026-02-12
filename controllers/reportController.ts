@@ -1,15 +1,12 @@
-import { Task } from "../model/taskSchema.js";
 import type { Request, Response } from "express";
+import { taskUtil } from "../utils/taskUtil.js";
+import { mongoTaskModules } from "../repository/task/taskMongoModules.js";
+
+const mongoTaskFunctions = new mongoTaskModules();
+const mongoTaskUtil = new taskUtil(mongoTaskFunctions);
 
 const taskReport = async (req : Request , res : Response ) => {
-  const tasks = await Task.find();
-
-  const report = {
-    total: tasks.length,
-    open: tasks.filter((t) => t.status === "OPEN").length,
-    closed: tasks.filter((t) => t.status === "CLOSED").length,
-  };
-
+  const report = await mongoTaskUtil.generateReport();
   res.send(report);
 }
 

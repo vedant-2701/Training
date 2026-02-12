@@ -1,18 +1,36 @@
-import { User } from "../model/userSchema.js";
+import type { userAbstractInterface } from "../repository/user/userFunctionsAbstractClass.js";
+import { logActivity } from "./logUtil.js";
+import type { baseUser } from "../repository/user/baseUser.js";
+import { sendEmail } from "./emailUtil.js";
 
-const saveUser = async (data : object) => {
-    const user = new User(data);
-    await user.save();
+class userUtil {
+    constructor ( private userModules : userAbstractInterface ){}
 
-    return user;
-}
+    async createUser ( data : baseUser ){
+        try{
+            const user = await this.userModules.create(data);
+            if(user.email){
+                sendEmail(user.email, ", Welcome !");
+            }
+            logActivity("New User Created");
 
-const fetchUsers = async () => {
-    const users = await User.find();
+            return user;
+        }catch (err : any){
+            logActivity(`Error while creating new user ${err}`);
+        }
+    }
 
-    return users;
+    async fetchUsers (){
+        try{
+            const users = await this.userModules.getAll();
+            logActivity("All users fetched");
+            return users;
+        }catch (err : any){
+            logActivity(`Error while fetching all users ${err}`);
+        }
+    }
 }
 
 // use ts, use interfaces as db changes, tracing logs and error handling, Di, class structure and basic oop's 
 
-export { saveUser, fetchUsers }
+export { userUtil };
