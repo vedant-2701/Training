@@ -1,12 +1,9 @@
 import { Router } from "express";
-import { ReportController } from "../controller/report.controller.js";
-import { ReportService } from "../services/report.service.js";
+import { reportFactory } from "../factories/ControllerFactory.js";
 
 const router = Router();
 
-const reportService = new ReportService();
-
-const reportController = new ReportController(reportService);
+const reportController = reportFactory.getController();
 
 router
     .route("/tasks")

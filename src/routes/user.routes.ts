@@ -1,14 +1,10 @@
 import { Router } from "express";
-import { UserController } from "../controller/user.controller.js";
-import { UserService } from "../services/user.service.js";
-import notification from "../config/notifier.js";
-import User from "../models/user.js";
+import { userFactory } from "../factories/ControllerFactory.js";
 
 const router: Router = Router();
 
-const userService = new UserService(notification, User);
+const userController = userFactory.getController();
 
-const userController = new UserController(userService)
 router
     .route("/")
     .get(userController.findUser)
