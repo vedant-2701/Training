@@ -1,20 +1,19 @@
-import Task from "../models/task.js";
 import { logActivity } from "../utils/log.js";
 import { CustomError } from "../utils/CustomError.js";
 import { BaseService } from "./base.service.js";
 import type { TaskInterface, PartialTaskInterface } from "../models/task.js";
 import type { Notification } from "../types/notification.js";
+import type { Model } from "mongoose";
 
 export class TaskService extends BaseService<TaskInterface> {
     private notification: Notification
 
-    constructor(notification: Notification) {
-        super(Task);
+    constructor(
+        notification: Notification,
+        taskModel: Model<TaskInterface>
+    ) {
+        super(taskModel);
         this.notification = notification;
-    }
-
-    async findAll (): Promise<TaskInterface[]> {
-        return await Task.find();
     }
 
     async create (taskData: PartialTaskInterface): Promise<TaskInterface> {
@@ -23,7 +22,7 @@ export class TaskService extends BaseService<TaskInterface> {
             status: "OPEN" as const,
             createdAt: new Date(),
         }
-        const task = await super.create(data as unknown as PartialTaskInterface);
+        const task = await super.create(data);
 
         logActivity("Task created");
 
