@@ -6,7 +6,7 @@ export class UserRepository implements UserRepositoryInterface {
     constructor(private userModel: Model<UserInterface>) {}
 
     async findAll(): Promise<UserInterface[]> {
-        return await this.userModel.find();
+        return await this.userModel.find().lean();
     }
 
     async create(data: PartialUserInterface): Promise<UserInterface> {
