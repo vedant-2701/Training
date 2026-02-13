@@ -1,9 +1,9 @@
-import { logActivity, logError } from "./logUtil.js";
-import { taskAbstractInterface } from "../repository/task/taskFunctionsAbstractClass.js";
-import type { baseTask, updateBaseTask } from "../repository/task/baseTask.js";
-import { email } from "./emailUtil.js";
+import { logActivity, logError } from "../../utils/logUtil.js";
+import { taskAbstractInterface } from "./taskFunctionsAbstractClass.js";
+import type { baseTask, updateBaseTask } from "./baseTask.js";
+import { email } from "../../utils/emailUtil.js";
 
-class taskUtil{
+class taskServiceClass{
     constructor (private taskModules : taskAbstractInterface){}
 
     async createTask ( data : baseTask ) {
@@ -83,4 +83,4 @@ class taskUtil{
     }
 }
 
-export { taskUtil };
+export { taskServiceClass };

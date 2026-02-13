@@ -1,9 +1,9 @@
-import type { userAbstractInterface } from "../repository/user/userFunctionsAbstractClass.js";
-import { logActivity, logError } from "./logUtil.js";
-import type { baseUser } from "../repository/user/baseUser.js";
-import { email } from "./emailUtil.js";
+import type { userAbstractInterface } from "./userFunctionsAbstractClass.js";
+import { logActivity, logError } from "../../utils/logUtil.js";
+import type { baseUser } from "./baseUser.js";
+import { email } from "../../utils/emailUtil.js";
 
-class userUtil {
+class userServiceClass {
     constructor ( private userModules : userAbstractInterface ){}
 
     async createUser ( data : baseUser ){
@@ -37,4 +37,4 @@ class userUtil {
 // controller shouldnt directly handle with the db
 // writing unit tests
 
-export { userUtil };
+export { userServiceClass };

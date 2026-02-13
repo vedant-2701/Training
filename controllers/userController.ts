@@ -1,17 +1,13 @@
-import type { Request, Response } from "express";
-import { userUtil } from "../utils/userUtil.js";
-import { mongoUserModules } from "../repository/user/userMongoModules.js";
-
-const mongoUserFunctions = new mongoUserModules();
-const mongoUserUtil = new userUtil(mongoUserFunctions); 
+import type { Request, Response } from "express"; 
+import { userService } from "../repository/user/userServiceContainer.js";
 
 const createUser = async (req : Request, res : Response) => {
-  const user = await mongoUserUtil.createUser(req.body);
+  const user = await userService.createUser(req.body);
   res.send(user);
 }
 
 const getUsers = async ( req : Request, res : Response) => {
-  const users = await mongoUserUtil.fetchUsers();
+  const users = await userService.fetchUsers();
 
   res.send(users);
 }

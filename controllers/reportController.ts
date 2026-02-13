@@ -1,12 +1,8 @@
 import type { Request, Response } from "express";
-import { taskUtil } from "../utils/taskUtil.js";
-import { mongoTaskModules } from "../repository/task/taskMongoModules.js";
-
-const mongoTaskFunctions = new mongoTaskModules();
-const mongoTaskUtil = new taskUtil(mongoTaskFunctions);
+import { taskService } from "../repository/task/taskServiceContainer.js";
 
 const taskReport = async (req : Request , res : Response ) => {
-  const report = await mongoTaskUtil.generateReport();
+  const report = await taskService.generateReport();
   res.send(report);
 }
 
