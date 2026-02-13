@@ -2,15 +2,13 @@ import express from'express';
 const router=express.Router();
 //import {createTask,deleteTask,updateTask,getTasks} from "../controller/taskController";
 import taskController from '../controller/taskController';
-import sendEmail from '../utils/email';
-import logActivity from '../utils/log';
-import sendSMS from '../utils/sms';
+import taskServices from '../services/taskServices';
 
-const sms={send:sendSMS};
-const logs={log:logActivity};
-const mail={send:sendEmail};
+import { createNotificationDependencies } from '../factories/notificationfactory';
 
-const taskcontroller=new taskController(sms,logs);
+const { text, logging } = createNotificationDependencies();
+const taskservices=new taskServices(text,logging);
+const taskcontroller=new taskController(taskservices);
 
 router.post("/",taskcontroller.createTask);
 

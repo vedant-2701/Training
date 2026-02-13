@@ -1,17 +1,19 @@
 
 import express from'express';
 const router=express.Router();
-import sendEmail from '../utils/email';
-import logActivity from'../utils/log';
-import sendSMS from '../utils/sms'
 //import {createUser,getUsers} from'../controller/userController'; 
-import userController from '../controller/userController'
+import userController from '../controller/userController';
+import userServices from '../services/userServices';
+import { createNotificationDependencies } from '../factories/notificationfactory';
+import logMessage from '../types/logMessage';
+import WelcomeMessage from '../types/welcomeMessage';
 
-const mail={send:sendEmail};
-const logs={log:logActivity};
-const sms={send:sendSMS};
+const { text, logging } = createNotificationDependencies();
 
-const usercontroller= new userController(sms,logs);
+const logWrapper = new logMessage(logging);
+const texts=new WelcomeMessage(text);
+const userservice = new userServices(logWrapper,texts);
+const usercontroller = new userController(userservice);
 
 router.post("/",usercontroller.createUser);
 
