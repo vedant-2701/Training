@@ -1,7 +1,7 @@
-import { logActivity } from "./logUtil.js";
+import { logActivity, logError } from "./logUtil.js";
 import { taskAbstractInterface } from "../repository/task/taskFunctionsAbstractClass.js";
 import type { baseTask, updateBaseTask } from "../repository/task/baseTask.js";
-import { sendEmail } from "./emailUtil.js";
+import { email } from "./emailUtil.js";
 
 class taskUtil{
     constructor (private taskModules : taskAbstractInterface){}
@@ -10,25 +10,25 @@ class taskUtil{
         try{
             const task = await this.taskModules.create(data);
 
-            logActivity("New Task Created");
+            logActivity.log("New Task Created");
 
             if(task.assignedTo){
-                sendEmail(task.assignedTo, `You have been assigned a new task with the id : ${task._id}`)
+                email.send(task.assignedTo, `You have been assigned a new task with the id : ${task._id}`)
             };
 
             return task;
         }catch (err : any){
-            logActivity(`Error while creating Task ${err}`);
+            logError.log(`Error while creating Task ${err}`);
         }
     }
 
     async getAllTasks (){
         try{
             const tasks = await this.taskModules.getAll();
-            logActivity("All Tasks Fetched");
+            logActivity.log("All Tasks Fetched");
             return tasks;
         }catch (err : any){
-            logActivity(`Error while fetching all the tasks ${err}`);
+            logError.log(`Error while fetching all the tasks ${err}`);
         }
     }
 
@@ -37,14 +37,14 @@ class taskUtil{
             const task = await this.taskModules.update(data);
 
             if (task.assignedTo){
-                sendEmail(task.assignedTo, `Your task with id : ${task._id} has been updated`);
+                email.send(task.assignedTo, `Your task with id : ${task._id} has been updated`);
             }
 
-            logActivity("Task updated");
+            logActivity.log("Task updated");
 
             return task;
         }catch (err : any){
-            logActivity(`Error while updating task ${err}`);
+            logError.log(`Error while updating task ${err}`);
         }
     }
 
@@ -53,14 +53,14 @@ class taskUtil{
             const task = await this.taskModules.delete(id);
 
             if(task){
-                logActivity("Task Deleted");
+                logActivity.log("Task Deleted");
             }else{
-                logActivity("No Task Found to delete");
+                logActivity.log("No Task Found to delete");
             }
 
             return task;
         }catch (err) {
-            logActivity(`Error while deleting task ${err}`);
+            logError.log(`Error while deleting task ${err}`);
         }
     }
 
@@ -74,11 +74,11 @@ class taskUtil{
                 closed : tasks.filter((t) => t.status === "CLOSED").length
             }
 
-            logActivity("Report Generated");
+            logActivity.log("Report Generated");
 
             return report;
         }catch (err : any){
-            logActivity(`Error while generating report ${err}`);
+            logError.log(`Error while generating report ${err}`);
         }
     }
 }

@@ -7,7 +7,6 @@ const mongoUserUtil = new userUtil(mongoUserFunctions);
 
 const createUser = async (req : Request, res : Response) => {
   const user = await mongoUserUtil.createUser(req.body);
-
   res.send(user);
 }
 
