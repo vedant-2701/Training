@@ -29,6 +29,7 @@ describe("TaskService", () => {
             const result = await taskService.createTask(taskInput);
 
             expect(result).toEqual(expectedTask);
+            
             expect(mockTaskRepository.create).toHaveBeenCalledWith(taskInput);
             expect(mockTaskRepository.create).toHaveBeenCalledTimes(1);
         });

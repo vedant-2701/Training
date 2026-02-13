@@ -1,7 +1,9 @@
-import type { Request, Response } from "express";
-import type { TaskInterface, PartialTaskInterface } from "../models/task.js";
 import { wrapAsync } from "../utils/wrapAsync.js";
+import type { Request, Response } from "express";
+import type { TaskInterface } from "../models/task.js";
 import type { TaskServiceInterface } from "../services/interfaces/TaskServiceInterface.js";
+import type { CreateTaskDTO, TaskResponseDTO, UpdateTaskDTO } from "../dtos/task.dto.js";
+import { TaskMapper } from "../mappers/task.mapper.js";
 
 export class TaskController {
 
@@ -9,28 +11,31 @@ export class TaskController {
 
     getTasks = wrapAsync(async (req: Request, res: Response) => {
         const tasks: TaskInterface[] = await this.taskService.getAllTasks();
-        res.status(200).send(tasks);
+
+        const response: TaskResponseDTO[] = TaskMapper.toDTOs(tasks);
+        res.status(200).send(response);
     });
 
-    saveTask = wrapAsync(async (req: Request, res: Response) => {
-        if (!req.body.title) {
-            return res.status(400).send("Title is required");
-        }
+    saveTask = wrapAsync(async (req: Request, res: Response) => {    
+        const taskData: CreateTaskDTO = req.body;
     
-        const taskData: PartialTaskInterface = req.body;
+        const task = await this.taskService.createTask(taskData);
+
+        const response: TaskResponseDTO = TaskMapper.toDTO(task);
     
-        const task: TaskInterface = await this.taskService.createTask(taskData);
-    
-        res.status(201).send(task);
+        res.status(201).send(response);
     });
     
     updateTask = wrapAsync(async (req: Request, res: Response) => {
         const id: string = req.params.id as string;
-        const taskData: PartialTaskInterface = req.body;
-    
-        const task: TaskInterface | null = await this.taskService.updateTask(id, taskData);
-    
-        res.status(200).send(task);
+        const taskData: UpdateTaskDTO = req.body;
+        
+        const task = await this.taskService.updateTask(id, taskData);
+
+        if (!task) return res.status(404).send({ message: "Task not found" });
+
+        const response: TaskResponseDTO = TaskMapper.toDTO(task);
+        res.status(200).send(response);
     });
     
     destroyTask = wrapAsync(async (req: Request, res: Response) => {

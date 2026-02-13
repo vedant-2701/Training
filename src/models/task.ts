@@ -1,16 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, type InferRawDocType } from "mongoose";
 
-export interface TaskInterface extends Document {
-    title: string;
-    description?: string;
-    status: "OPEN" | "CLOSED";
-    assignedTo?: string;
-    createdAt: Date;
-}
-
-export type PartialTaskInterface = Partial<TaskInterface>;
-
-const TaskSchema: Schema = new Schema({
+const TaskSchemaDefinition = {
     title: { 
         type: String, 
         required: true 
@@ -19,7 +9,8 @@ const TaskSchema: Schema = new Schema({
         type: String 
     },
     status: { 
-        type: String, 
+        type: String,
+        enum: ["OPEN", "CLOSED"], 
         default: "OPEN" 
     },
     assignedTo: { 
@@ -29,6 +20,12 @@ const TaskSchema: Schema = new Schema({
         type: Date, 
         default: Date.now 
     },
-});
+} as const;
+
+const TaskSchema: Schema = new Schema(TaskSchemaDefinition);
+
+export type TaskInterface = InferRawDocType<typeof TaskSchemaDefinition>;
+
+export type PartialTaskInterface = Partial<TaskInterface>;
 
 export default mongoose.model<TaskInterface>("Task", TaskSchema);

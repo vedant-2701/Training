@@ -1,14 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, type InferRawDocType } from "mongoose";
 
-export interface UserInterface extends Document {
-    name?: string,
-    email: string,
-    password: string,
-}
-
-export type PartialUserInterface = Partial<UserInterface>;
-
-const UserSchema: Schema = new Schema({
+const UserSchemaDefinition = {
     name: { 
         type: String,
     },
@@ -19,6 +11,12 @@ const UserSchema: Schema = new Schema({
     password: {
         type: String,
     }
-});
+} as const;
+
+const UserSchema: Schema = new Schema();
+
+export type UserInterface = InferRawDocType<typeof UserSchemaDefinition>;
+
+export type PartialUserInterface = Partial<UserInterface>;
 
 export default mongoose.model<UserInterface>("User", UserSchema);
