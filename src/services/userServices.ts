@@ -1,13 +1,23 @@
 import User from '../model/User';
 import logMessage from "../types/logMessage";
-import welcomeMessage from "../types/welcomeMessage"
+import welcomeMessage from "../types/welcomeMessage";
+import { UserRepository, IUserRepository } from '../repositories/userRepository';
 
 export default class userServices{
-    constructor(private logmessage: logMessage,private welcomemessage:welcomeMessage){}
+    private userRepo: IUserRepository;
+    constructor(private logmessage: logMessage,private welcomemessage:welcomeMessage,
+        userRepo?: IUserRepository
+  ) {
+    this.userRepo = userRepo ?? new UserRepository();
+  }
+    
 
     async createNewUser(userData :any){
-        const user=new User(userData);
-        await user.save();
+        //const user=new User(userData);
+        //await user.save();
+
+        const user = await this.userRepo.create(userData);
+
         this.welcomemessage.send(user);         
 
     this.logmessage.log?.(user);
@@ -19,6 +29,7 @@ export default class userServices{
 }
      
     async fetchAllUsers(){
-       return await User.find();
+       //return await User.find();
+       return this.userRepo.findAll();
     }
 }

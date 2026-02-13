@@ -1,43 +1,44 @@
 import Task from'../model/Task';
 import type {Text,Logger} from "../types/notification";
+import { TaskRepository,ITaskRepository } from '../repositories/taskRepository';
 
 export default class taskServices{
-    constructor(private text:Text,private logging :Logger){}
+    private taskRepo:ITaskRepository;
+    constructor(private text:Text,private logging :Logger,taskRepo?: ITaskRepository
+      ) {
+        this.taskRepo = taskRepo ?? new TaskRepository();
+      }
     
 
     async createNewTask(taskBody:any){
-        const task=new Task(taskBody);
-        await task.save();
+        const task = await this.taskRepo.create(taskBody);
         this.logging.log("Task created");
 
-    if (task.assignedTo) {
-      this.text.send(task.assignedTo, "Task Assigned");
-    }
+    
     }
 
    async delete(taskId: string) {
-        await Task.findByIdAndDelete(taskId);
-        this.logging.log("Task deleted");
-    }
+  const deleted = await this.taskRepo.delete(taskId);
+  
+  if (!deleted) {
+    throw new Error("Task not found");
+  }
+  
+  this.logging.log("Task deleted");
+}
 
-    async update(taskId: string, updates: any) {
-        const task = await Task.findById(taskId);
-        
-        if (!task) {
-            throw new Error("Task not found");   
-        }
-
-        task.status = updates.status || task.status;
-        task.title   = updates.title   || task.title;
-
-        await task.save();
-
-        this.logging.log("Task updated");
-
-        return task;   
-    }
-
-    async fetchAllTask(){
-        return await Task.find();
-    }
+async update(taskId: string, updates: any) {
+  const updatedTask = await this.taskRepo.update(taskId, updates);
+  
+  if (!updatedTask) {
+    throw new Error("Task not found");
+  }
+  
+  this.logging.log("Task updated");
+  return updatedTask;
+}
+async fetchAllTask() {
+  return this.taskRepo.findAll();
+}
+    
 }
