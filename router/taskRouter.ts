@@ -1,13 +1,13 @@
 import express from "express";
-import { createTask, getTasks, updateTask, deleteTask } from "../controllers/taskController.js";
-import { taskReport } from "../controllers/reportController.js";
+import { taskController } from "../factory/taskFactory.js";
+import { bodyErrorHandler, errorHandler } from "../factory/errorFactory.js";
 
 const taskRouter = express.Router();
 
-taskRouter.post("/", createTask); // create task
-taskRouter.get("/", getTasks); // get all tasks
-taskRouter.put("/:id", updateTask); // update task
-taskRouter.delete("/:id", deleteTask); // delete task
-taskRouter.get("/report", taskReport) // report on all tasks
+taskRouter.post("/", bodyErrorHandler.validate, errorHandler.controllerWrapper(taskController.createTask));
+taskRouter.get("/", errorHandler.controllerWrapper(taskController.getAllTasks));
+taskRouter.put("/:id", bodyErrorHandler.validate, errorHandler.controllerWrapper(taskController.updateTask));
+taskRouter.delete("/:id", errorHandler.controllerWrapper(taskController.deleteTask));
+taskRouter.get("/report", errorHandler.controllerWrapper(taskController.generateReport));
 
 export { taskRouter };

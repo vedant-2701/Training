@@ -5,7 +5,7 @@ import { logActivity } from "../utils/logUtil.js";
 const connectMongoDB = () => {
 
   if (!process.env.mongoDBConnection){
-    logActivity("MongoDB Connection string not provided");
+    logActivity.log("MongoDB Connection string not provided");
   }
 
   try{
@@ -15,7 +15,7 @@ const connectMongoDB = () => {
         console.log("MongoDB connected");
     });
   }catch (err : any){
-    logActivity(`Error while connecting to mongoDB ${err}`);
+    logActivity.log(`Error while connecting to mongoDB ${err}`);
   }
 }
 

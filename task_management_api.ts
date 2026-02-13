@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectMongoDB } from "./db/db.js";
 import { userRouter } from "./router/userRouter.js";
 import { taskRouter } from "./router/taskRouter.js";
+import { globalErrorHandler } from "./factory/errorFactory.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use("/users", userRouter);
 
 app.use("/tasks", taskRouter);
 // ---------------- SERVER ----------------
+app.use(globalErrorHandler.handleError);
 
 app.listen(process.env.PORT, () => {
   console.log("Server running on port 5000");

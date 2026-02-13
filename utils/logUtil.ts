@@ -9,7 +9,7 @@ class logActivityClass implements activity{
 }
 
 class logErrorClass implements activity {
-  log (message : Object) {
+  log (message : any) {
     console.log(`ERROR OCCURED : ${message}`);
   }
 }

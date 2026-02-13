@@ -1,13 +1,12 @@
 import { User } from "../../model/userSchema.js";
 import type { baseUser } from "./baseUser.js";
-import { userAbstractInterface } from "./userFunctionsAbstractClass.js";
+import { userGeneralMethodsClass } from "./userGeneralMethodsClass.js";
 
-class mongoUserModules extends userAbstractInterface{
+class userMongoDbRepository extends userGeneralMethodsClass{
     async create(data : baseUser) : Promise <baseUser> {
         const user = new User(data);
         await user.save();
-
-        return user.toObject(); // converts mongoose document into plaint js object, strips all mongoose methods so we only get the pure data object.
+        return user;
     }
 
     async getAll() : Promise<baseUser[]> {
@@ -15,4 +14,4 @@ class mongoUserModules extends userAbstractInterface{
     }
 }
 
-export { mongoUserModules }
+export { userMongoDbRepository }
