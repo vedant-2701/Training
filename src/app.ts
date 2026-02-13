@@ -30,5 +30,5 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // ---------------- SERVER ----------------
 const PORT = env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log("Server running on port 5000");
+    console.log(`Server running on port ${PORT}`);
 });

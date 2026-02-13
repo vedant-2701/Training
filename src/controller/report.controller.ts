@@ -1,15 +1,15 @@
-import type { Request, Response } from "express";
-import type { Report } from "../services/report.service.js";
 import { wrapAsync } from "../utils/wrapAsync.js";
-import { ReportService } from "../services/report.service.js";
+import type { ReportData } from "../types/report.js";
+import type { Request, Response } from "express";
+import type { ReportServiceInterface } from "../services/interfaces/ReportServiceInterface.js";
 
 export class ReportController {
 
-    constructor(private reportService: ReportService) { }
+    constructor(private reportService: ReportServiceInterface) { }
     
     getReportForTasks = wrapAsync (async (req: Request, res: Response) => {
-        const report: Report = await this.reportService.getReportForAllTasks();
+        const report: ReportData = await this.reportService.getReportForTasks();
     
         res.status(200).send(report);
-    })
+    });
 }
